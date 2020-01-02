@@ -1,4 +1,5 @@
 const Web3 = require('web3.min');
+const GAS_PRICE_DEFAULT = '20000000000';
 
 cc.Class({
   extends: cc.Component,
@@ -16,6 +17,7 @@ cc.Class({
       default: null,
       type: cc.Label
     },
+    inputBox: cc.EditBox,
     ContractABI: cc.JsonAsset
   },
 
@@ -28,9 +30,11 @@ cc.Class({
     this.currentValue = 0;
     this.address = '0x';
     this.balance = 0;
-    this.currentValueLabel.string = 'Current Value: ' + this.currentValue;
     this.addressLabel.string = 'Address: ' + this.address;
     this.balanceLabel.string = 'Balance: ' + this.currentValue;
+    this.updateCurrentValue(0);
+
+    this.initWeb3();
   },
 
   initWeb3() {
@@ -46,7 +50,6 @@ cc.Class({
           .enable()
           .then(accounts => {
             this.initAccount();
-            // this.initContract();
           })
           .catch(error => {
             console.error(error);
@@ -58,7 +61,6 @@ cc.Class({
         this.Web3.setProvider(this.Web3Provider);
 
         this.initAccount();
-        // this.initContract();
       }
     } else {
       console.error('You must enable and login into your Wallet or MetaMask accounts!');
@@ -92,7 +94,47 @@ cc.Class({
         console.error(err);
         return;
       }
-      this.balanceLabel.string = 'Balance: ' + balance;
+      this.balanceLabel.string = cc.js.formatStr(
+        'Balance: %d ETH',
+        parseInt(this.Web3.utils.fromWei(balance))
+      );
     });
+  },
+
+  getValue() {
+    this.Contract.methods
+      .get()
+      .call({
+        from: this.address
+      })
+      .then(val => {
+        this.updateCurrentValue(val);
+        console.log('get current value: ', val);
+      });
+  },
+
+  setValue() {
+    this.Contract.methods
+      .set(this.inputBox.string)
+      .send({
+        from: this.address,
+        gas: 250000,
+        gasPrice: GAS_PRICE_DEFAULT
+      })
+      .on('transactionHash', hash => {
+        console.log('transactionHash: ', hash);
+      })
+      .on('receipt', receipt => {
+        this.getValue();
+        // this.txConfirm.active = false;
+      })
+      .on('error', error => {
+        console.error('endgame error: ', error);
+        // this.txConfirm.active = false;
+      });
+  },
+
+  updateCurrentValue(value) {
+    this.currentValueLabel.string = 'Current Value: ' + value;
   }
 });
