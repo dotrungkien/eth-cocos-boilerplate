@@ -192,7 +192,7 @@
       "array": [
         0,
         0,
-        571.5767822265625,
+        543.8639526367188,
         0,
         0,
         0,
@@ -1538,8 +1538,8 @@
     "inputBox": {
       "__id__": 32
     },
-    "ContractABI": {
-      "__uuid__": "d3bc02fd-df7c-401e-8b5b-18b7ff687b30"
+    "contractABI": {
+      "__uuid__": "256f237e-0f49-40c9-b41d-d8923a36a206"
     },
     "_id": "dcGJ+cSA5D7qNtScKfLjJJ"
   }

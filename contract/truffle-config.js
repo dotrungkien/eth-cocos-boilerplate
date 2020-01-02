@@ -1,5 +1,5 @@
 module.exports = {
-  contracts_build_directory: '../game/assets/contracts',
+  contracts_build_directory: '../game/assets/Contracts',
   networks: {
     development: {
       host: '127.0.0.1',
