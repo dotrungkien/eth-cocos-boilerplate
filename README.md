@@ -55,11 +55,7 @@ npx hardhat run scripts/deploy.js --network localhost
 
 - change `contractAddress` in `game/assets/Script/HelloWorld.js` by the address of Simple Store you deployed above
 
-- run scene
-
-![init-scene](docs/init-scene.png)
-
-- change value and confirm transaction
+- run scene, change value and confirm transaction
 
 ![confirm-tx](docs/confirm-tx.png)
 
