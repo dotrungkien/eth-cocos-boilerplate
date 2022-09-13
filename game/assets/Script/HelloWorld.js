@@ -7,21 +7,21 @@ cc.Class({
   properties: {
     currentValueLabel: {
       default: null,
-      type: cc.Label
+      type: cc.Label,
     },
     addressLabel: {
       default: null,
-      type: cc.Label
+      type: cc.Label,
     },
     balanceLabel: {
       default: null,
-      type: cc.Label
+      type: cc.Label,
     },
     inputBox: cc.EditBox,
-    contractABI: cc.JsonAsset
+    contractABI: cc.JsonAsset,
   },
 
-  onLoad: function() {
+  onLoad: function () {
     this.web3 = null;
     this.web3Provider = null;
     this.web3ProviderName = 'metamask';
@@ -78,14 +78,8 @@ cc.Class({
   },
 
   initContract() {
-    let networks = { main: '1', ropsten: '3', kovan: '42', rinkeby: '4' };
-    this.web3.eth.net.getNetworkType().then(netId => {
-      this.contract = new this.web3.eth.Contract(
-        this.contractABI.json.abi,
-        // this.contractABI.json.networks[networks[netId]].address
-        this.contractABI.json.networks['123456789'].address
-      );
-    });
+    let contractAddress = '0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9';
+    this.contract = new this.web3.eth.Contract(this.contractABI.json.abi, contractAddress);
   },
 
   updateBalance() {
@@ -94,10 +88,7 @@ cc.Class({
         console.error(err);
         return;
       }
-      this.balanceLabel.string = cc.js.formatStr(
-        'Balance: %d ETH',
-        parseInt(this.web3.utils.fromWei(balance))
-      );
+      this.balanceLabel.string = cc.js.formatStr('Balance: %d ETH', parseInt(this.web3.utils.fromWei(balance)));
     });
   },
 
@@ -105,7 +96,7 @@ cc.Class({
     this.contract.methods
       .get()
       .call({
-        from: this.address
+        from: this.address,
       })
       .then(val => {
         this.updateCurrentValue(val);
@@ -118,8 +109,8 @@ cc.Class({
       .set(this.inputBox.string)
       .send({
         from: this.address,
-        gas: 250000,
-        gasPrice: GAS_PRICE_DEFAULT
+        gas: 2500000,
+        gasPrice: GAS_PRICE_DEFAULT,
       })
       .on('transactionHash', hash => {
         // console.log('transactionHash: ', hash);
@@ -134,5 +125,5 @@ cc.Class({
 
   updateCurrentValue(value) {
     this.currentValueLabel.string = 'Current Value: ' + value;
-  }
+  },
 });
